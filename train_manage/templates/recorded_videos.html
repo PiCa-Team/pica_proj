@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+	녹화 영상 리스트
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/recorded_videos.css' %}">
+{% endblock %}
+
+{% block content %}
+	<header>
+        <h1>녹화된 영상</h1>
+    </header>
+    <section class="video-gallery">
+        {% for video in videos %}
+            <div class="video-container">
+                <a href="{% url 'video_detail' video %}">
+                    <h3>{{ video }}</h3>
+                </a>
+            </div>
+        {% endfor %}
+    </section>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+	{{ video_name }}
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/recorded_videos_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+	<header>
+        <h1>{{ video_name }}</h1>
+    </header>
+    <section class="video-container">
+        <video src="{{ video_url }}" autoplay muted></video>
+    </section>
+{% endblock %}

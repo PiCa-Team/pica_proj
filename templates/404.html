@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+	404 - Page Not Found
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/404.css' %}">
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+        <div class="train">
+            <div class="train-body"></div>
+        </div>
+        <h1>404</h1>
+        <p>Page not found!</p>
+        <a href="{% url "home" %}" class="button">Go to Home</a>
+    </div>
+
+{% endblock %}

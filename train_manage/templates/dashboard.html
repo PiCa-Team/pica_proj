@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+	대시보드
+{% endblock %}
+
+{% block css_files %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+	<div class="container">
+        <h1>Dashboard</h1>
+        <div class="cards">
+            <div class="card">
+                <h3>Total Visitors</h3>
+                <div class="card-value">12,345</div>
+            </div>
+            <div class="card">
+                <h3>Average Duration</h3>
+                <div class="card-value">4:30</div>
+            </div>
+            <div class="card">
+                <h3>Peak Time</h3>
+                <div class="card-value">8:00 AM - 9:00 AM</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block js_files %}
+	<script type="text/javascript" src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}
