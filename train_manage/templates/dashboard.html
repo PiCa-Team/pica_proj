@@ -10,25 +10,35 @@
 {% endblock %}
 
 {% block content %}
-	<div class="container">
-        <h1>Dashboard</h1>
-        <div class="cards">
-            <div class="card">
-                <h3>Total Visitors</h3>
-                <div class="card-value">12,345</div>
+	<div class="dashboard-select-container">
+		<form method="post">
+		    {% csrf_token %}
+			<label for="dashboard-select">대시보드 선택:</label>
+	        <select id="dashboard-select" name="selected_dashboard_id">
+	            {% if superset_dashboards %}
+			        {% for dashboard in superset_dashboards %}
+			            <option value="{{ dashboard.dashboard_id }}" {% if dashboard.dashboard_id == selected_dashboard_id %}selected{% endif %}>
+			                {{ dashboard.dashboard_title }}
+			            </option>
+			        {% endfor %}
+	            {% else %}
+		            <option>선택해주세요.</option>
+	            {% endif %}
+		    </select>
+			<button type="submit">변경</button>
+		</form>
+    </div>
+    <div id="superset-dashboard">
+        {% if superset_dashboard_url is not None %}
+            <iframe id="superset-iframe" src="{{ superset_dashboard_url }}" frameborder="0">
+            </iframe>
+        {% else %}
+            <div class="no-dashboard-container">
+                <p>대시보드가 없습니다.</p>
             </div>
-            <div class="card">
-                <h3>Average Duration</h3>
-                <div class="card-value">4:30</div>
-            </div>
-            <div class="card">
-                <h3>Peak Time</h3>
-                <div class="card-value">8:00 AM - 9:00 AM</div>
-            </div>
-        </div>
+        {% endif %}
     </div>
 {% endblock %}
-
 
 {% block js_files %}
 	<script type="text/javascript" src="{% static 'js/dashboard.js' %}"></script>

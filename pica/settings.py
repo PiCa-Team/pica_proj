@@ -137,3 +137,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # 로그인 URL
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
+
+# 사용자가 30분동안 활동이 없으면 자동으로 로그아웃
+SESSION_COOKIE_AGE = 1800  # 1800 seconds = 30 minutes
+
+# 슈퍼셋 설정
+SUPERSET_URL = 'http://127.0.0.1:8088'
+SUPERSET_USERNAME = Environ.SUPERSET_USERNAME
+SUPERSET_PASSWORD = Environ.SUPERSET_PASSWORD

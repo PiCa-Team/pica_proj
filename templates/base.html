@@ -19,7 +19,7 @@
 	            <a href="{% url "introduce" %}" class="navbar-item">프로젝트 소개</a>
 		        {% if user.is_authenticated %}
 			        <a href="{% url "recorded_videos" %}" class="navbar-item">녹화 영상</a>
-			        <a href="{% url "dashboard" %}" class="navbar-item">대시보드</a>
+			        <a href="{% url "dashboard"%}" class="navbar-item">대시보드</a>
 	                <a href="{% url "logout" %}" class="navbar-item">로그아웃</a>
 				{% else %}
 	                <a href="{% url "login" %}" class="navbar-item">로그인</a>

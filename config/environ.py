@@ -27,3 +27,7 @@ class Environ:
     AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
     AWS_REGION = os.environ.get("AWS_REGION")
 
+    # Superset 정보
+    SUPERSET_USERNAME = os.environ.get("SUPERSET_USERNAME")
+    SUPERSET_PASSWORD = os.environ.get("SUPERSET_PASSWORD")
+
