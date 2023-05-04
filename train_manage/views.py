@@ -20,9 +20,6 @@ prefix = "video"
 def home(request):
     videos = get_videos_from_s3()
     video_url = f"https://{bucket_name}.s3.{Environ.AWS_REGION}.amazonaws.com/{videos[1]}"
-
-
-
     context = {
         "video_url": video_url,
     }
