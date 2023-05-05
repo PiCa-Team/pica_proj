@@ -9,13 +9,6 @@ class Environ:
     # 장고 시크릿 키
     SECRET_KEY = os.environ.get('SECRET_KEY')
 
-    # rootDB
-    DB_HOST = os.environ.get('DB_HOST')
-    DB_USER = os.environ.get('DB_USER')
-    DB_PASS = os.environ.get('DB_PASS')
-    DB_NAME = os.environ.get('DB_NAME')
-    DB_PORT = os.environ.get('DB_PORT')
-
     # SK-api 키
     SK_API_KEY = os.environ.get("SK_API_KEY")
 
@@ -30,4 +23,18 @@ class Environ:
     # Superset 정보
     SUPERSET_USERNAME = os.environ.get("SUPERSET_USERNAME")
     SUPERSET_PASSWORD = os.environ.get("SUPERSET_PASSWORD")
+    SUPERSET_URL = os.environ.get("SUPERSET_URL")
+
+    # SSH 터널링 정보
+    SSH_TUNNEL_USERNAME = os.environ.get('SSH_TUNNEL_USERNAME')
+    SSH_TUNNEL_PKEY = os.environ.get('SSH_TUNNEL_PKEY')
+    SSH_TUNNEL_HOST = os.environ.get('SSH_TUNNEL_HOST')
+    SSH_TUNNEL_PORT = int(os.environ.get('SSH_TUNNEL_PORT', 22))
+
+    # RDS 정보
+    RDS_USERNAME = os.environ.get('RDS_USERNAME')
+    RDS_PASSWORD = os.environ.get('RDS_PASSWORD')
+    RDS_HOST = os.environ.get('RDS_HOST')
+    RDS_PORT = int(os.environ.get('RDS_PORT', 3306))
+    RDS_DB_NAME = os.environ.get('RDS_DB_NAME')
 

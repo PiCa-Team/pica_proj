@@ -14,6 +14,8 @@ from pathlib import Path
 from config.environ import Environ
 import pymysql
 import os
+from sshtunnel import SSHTunnelForwarder
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,14 +79,24 @@ WSGI_APPLICATION = "pica.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 pymysql.install_as_MySQLdb()
 
+# SSH 터널 설정
+server = SSHTunnelForwarder(
+    (Environ.SSH_TUNNEL_HOST, Environ.SSH_TUNNEL_PORT),
+    ssh_username=Environ.SSH_TUNNEL_USERNAME,
+    ssh_pkey=Environ.SSH_TUNNEL_PKEY,
+    remote_bind_address=(Environ.RDS_HOST, Environ.RDS_PORT)
+)
+
+server.start()  # SSH 터널 시작
+
 DATABASES = {
-    "default": {
-        'ENGINE': "django.db.backends.mysql",
-        'NAME': Environ.DB_NAME,
-        'USER': Environ.DB_USER,
-        'PASSWORD': Environ.DB_PASS,
-        'HOST': Environ.DB_HOST,
-        'PORT': Environ.DB_PORT
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': Environ.RDS_DB_NAME,
+        'USER': Environ.RDS_USERNAME,
+        'PASSWORD': Environ.RDS_PASSWORD,
+        'HOST': '127.0.0.1',
+        'PORT': server.local_bind_port,  # 로컬 포트로 터널링된 포트 사용
     }
 }
 
@@ -127,7 +139,7 @@ STATICFILES_DIRS = [
 
 # Media Directory
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = BASE_DIR / 'media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -142,6 +154,6 @@ LOGIN_REDIRECT_URL = 'home'
 SESSION_COOKIE_AGE = 1800  # 1800 seconds = 30 minutes
 
 # 슈퍼셋 설정
-SUPERSET_URL = 'http://127.0.0.1:8088'
+SUPERSET_URL = Environ.SUPERSET_URL
 SUPERSET_USERNAME = Environ.SUPERSET_USERNAME
 SUPERSET_PASSWORD = Environ.SUPERSET_PASSWORD
