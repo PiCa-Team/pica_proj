@@ -29,7 +29,7 @@ SECRET_KEY = Environ.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['3.37.204.249', 'localhost', '127.0.0.1']
 
 # Application definition
 
