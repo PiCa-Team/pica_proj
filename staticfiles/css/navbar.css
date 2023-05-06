@@ -1,0 +1,39 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    padding-top: 4rem; /* 네비바 높이에 맞게 상단 여백 추가 */
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #222;
+    padding: 1rem;
+    position: fixed; /* 네비바를 고정 */
+    top: 0; /* 상단에 고정 */
+    left: 0; /* 왼쪽에 고정 */
+    right: 0; /* 오른쪽에 고정 */
+    z-index: 1000; /* 다른 요소들 위에 표시되도록 함 */
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    color: #fff;
+    text-decoration: none;
+}
+
+.navbar-menu {
+    display: flex;
+}
+
+.navbar-item {
+    margin-left: 1rem;
+    font-size: 1.25rem;
+    color: #fff;
+    text-decoration: none;
+}
+
+.navbar-item:hover {
+    color: #ddd;
+}

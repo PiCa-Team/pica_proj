@@ -1,0 +1,47 @@
+/* 기본 패딩 및 마진 초기화 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 페이지 전체적인 스타일 */
+body {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f2f2f2;
+}
+
+/* 컨테이너 스타일 */
+.container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+/* 제목 스타일 */
+.container h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* 비디오 컨테이너 스타일 */
+.video-container {
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+video {
+    width: 100%;
+    max-width: 900px;
+    border-radius: 5px;
+}
