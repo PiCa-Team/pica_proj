@@ -10,6 +10,9 @@ class SubwayLine(models.Model):
     class Meta:
         db_table = 'pica_subwayline'
 
+    def __str__(self):
+        return f"{self.subway_line}"
+
 
 class SubwayName(models.Model):
     subway_name = models.CharField(max_length=10)
@@ -20,13 +23,16 @@ class SubwayName(models.Model):
     class Meta:
         db_table = 'pica_subwayname'
 
+    def __str__(self):
+        return f"{self.subway_line} - {self.subway_name}"
+
 
 class TrainCongestion(models.Model):
     train_number = models.CharField(max_length=10)
     train_status = models.CharField(max_length=10)
     train_up_down = models.CharField(max_length=10)
     train_congestion = models.IntegerField()
-    train_car_congestion = models.CharField(max_length=30)
+    train_car_congestion = models.CharField(max_length=100)
     train_info_delivery_deadline = models.DateTimeField(default=timezone.now)
     subway_name = models.OneToOneField(SubwayName, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -34,3 +40,6 @@ class TrainCongestion(models.Model):
 
     class Meta:
         db_table = 'pica_train_congestion'
+
+    def __str__(self):
+        return f"{self.train_number} - {self.subway_name}"

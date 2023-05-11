@@ -2,7 +2,7 @@ import requests as req
 from config.environ import Environ
 
 
-def get_live_seoul_train_congestion(start_index, end_index, subway_line):
+def get_seoul_subway_realtime_location(start_index, end_index, subway_line):
     url = f"http://swopenAPI.seoul.go.kr/api/subway/{Environ.SEOUL_DATA_API_KEY}/json/realtimePosition/" \
           f"{start_index}/{end_index}/{subway_line}/"
 
@@ -43,4 +43,4 @@ def get_live_seoul_train_congestion(start_index, end_index, subway_line):
 
 
 if __name__ == '__main__':
-    get_live_seoul_train_congestion("0", '50', "2호선")
+    get_seoul_subway_realtime_location("0", '50', "2호선")

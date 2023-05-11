@@ -7,17 +7,34 @@ import django
 
 django.setup()
 
-from train_manage.models import SubwayName
+from django.db import transaction, IntegrityError
 
 
 def read_and_insert_csv_file(path, model):
-    df = pd.read_csv(path)
-    df_list = [model(**row) for index, row in df.iterrows()]
-    model.objects.bulk_create(df_list)
+    try:
+        df = pd.read_csv(path)
+    except Exception as e:
+        print("An error occurred while reading the CSV file: ", e)
+        return
 
-    return df_list
+    df_list = [model(**row) for index, row in df.iterrows()]
+    try:
+        with transaction.atomic():
+            model.objects.bulk_create(df_list)
+        print("Successfully inserted data.")
+    except IntegrityError as e:
+        print("An error occurred: ", e)
+
+
+def bulk_insert_data_to_database(model, data: list):
+    try:
+        with transaction.atomic():
+            model.objects.bulk_create(data)
+        print("Successfully inserted data.")
+    except IntegrityError as e:
+        print("An error occurred: ", e)
 
 
 if __name__ == '__main__':
-    csv_file_path = '/Users/seok/Desktop/pica/국가철도공단_수도권2호선.csv'
-    read_and_insert_csv_file(csv_file_path, SubwayName)
+    pass
+
