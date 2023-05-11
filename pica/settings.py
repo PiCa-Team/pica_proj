@@ -97,6 +97,9 @@ DATABASES = {
         'PASSWORD': Environ.RDS_PASSWORD,
         'HOST': '127.0.0.1',
         'PORT': server.local_bind_port,  # 로컬 포트로 터널링된 포트 사용
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
@@ -121,13 +124,12 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
-LANGUAGE_CODE = "ko-kr"
-
 TIME_ZONE = "Asia/Seoul"
+USE_TZ = False
 
+LANGUAGE_CODE = "ko-kr"
 USE_I18N = True
 
-USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
