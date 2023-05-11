@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 
 class SubwayLine(models.Model):
@@ -33,7 +32,7 @@ class TrainCongestion(models.Model):
     train_up_down = models.CharField(max_length=10)
     train_congestion = models.IntegerField()
     train_car_congestion = models.CharField(max_length=100)
-    train_info_delivery_deadline = models.DateTimeField(default=timezone.now)
+    train_info_delivery_deadline = models.CharField(max_length=50)
     subway_name = models.OneToOneField(SubwayName, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
