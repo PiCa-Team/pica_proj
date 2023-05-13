@@ -2,7 +2,7 @@ from django.db import models
 
 
 class SubwayLine(models.Model):
-    subway_line = models.CharField(max_length=10)
+    subway_line = models.CharField(max_length=10, db_index=True)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
@@ -14,7 +14,7 @@ class SubwayLine(models.Model):
 
 
 class SubwayName(models.Model):
-    subway_name = models.CharField(max_length=10)
+    subway_name = models.CharField(max_length=10, db_index=True)
     subway_line = models.ForeignKey(SubwayLine, on_delete=models.CASCADE)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
@@ -39,6 +39,13 @@ class TrainCongestion(models.Model):
 
     class Meta:
         db_table = 'pica_train_congestion'
+        indexes = [
+            models.Index(fields=[
+                'train_status',
+                'train_up_down',
+                'subway_name'
+            ])
+        ]
 
     def __str__(self):
         return f"{self.train_number} - {self.subway_name}"
