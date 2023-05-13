@@ -33,7 +33,7 @@ class TrainCongestion(models.Model):
     train_congestion = models.IntegerField()
     train_car_congestion = models.CharField(max_length=100)
     train_info_delivery_deadline = models.CharField(max_length=50)
-    subway_name = models.OneToOneField(SubwayName, on_delete=models.CASCADE)
+    subway_name = models.ForeignKey(SubwayName, on_delete=models.CASCADE, unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

@@ -167,11 +167,7 @@ SUPERSET_USERNAME = Environ.SUPERSET_USERNAME
 SUPERSET_PASSWORD = Environ.SUPERSET_PASSWORD
 
 CRONJOBS = [
-    # ('15 8,18 * * *',
-    #  'train_manage.cron.cron_job',
-    #  '>> '+os.path.join(BASE_DIR, f'config/log/cron_{timezone.now()}.log')+' 2>&1 ')
-
-    ('*/2 * * * *',
+    ('15 8,18 * * *',
      'train_manage.cron.cron_job',
      '>> '+os.path.join(BASE_DIR, f'config/cron_log/{datetime.now().date()}.log')+' 2>&1 ')
 ]
