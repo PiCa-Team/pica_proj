@@ -10,6 +10,7 @@ from train_manage.seoul_subway_congestion_data_upload import insert_subway_conge
 from train_manage.seoul_subway_realtime_congestion_info import get_seoul_subway_realtime_congestion
 from train_manage.seoul_subway_realtime_location_info import get_seoul_subway_realtime_location
 from train_manage import models
+from django.utils import timezone
 
 
 def cron_job():
@@ -18,9 +19,9 @@ def cron_job():
         insert_count = 3
         subway_realtime_congestion_data = get_seoul_subway_realtime_congestion(train_live_infos, insert_count)
         insert_subway_congestion_data_to_database(models.TrainCongestion, subway_realtime_congestion_data)
-        print(f'작업이 성공적으로 완료되었습니다: \n {subway_realtime_congestion_data}\n')
+        print(f'{timezone.now()} \n 작업이 성공적으로 완료되었습니다: \n {subway_realtime_congestion_data}\n')
     except Exception as e:
-        print(f'작업 중 에러가 발생했습니다: {e}\n')
+        print(f'{timezone.now()} \n 작업 중 에러가 발생했습니다: {e}\n')
 
 
 def crontab_every_minute():

@@ -57,7 +57,7 @@ def get_seoul_subway_realtime_congestion(train_live_infos, insert_count):
         except IntegrityError as e:
             print(f"An error occurred while inserting data: {e}")
 
-    # print(train_congestion_list)
+#    print(train_congestion_list)
     return train_congestion_list
 
 

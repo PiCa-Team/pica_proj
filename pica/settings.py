@@ -9,11 +9,8 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+from datetime import datetime
 from pathlib import Path
-
-from django.utils import timezone
-
 from config.environ import Environ
 import pymysql
 import os
@@ -170,7 +167,11 @@ SUPERSET_USERNAME = Environ.SUPERSET_USERNAME
 SUPERSET_PASSWORD = Environ.SUPERSET_PASSWORD
 
 CRONJOBS = [
-    ('15 8,18 * * *',
+    # ('15 8,18 * * *',
+    #  'train_manage.cron.cron_job',
+    #  '>> '+os.path.join(BASE_DIR, f'config/log/cron_{timezone.now()}.log')+' 2>&1 ')
+
+    ('*/2 * * * *',
      'train_manage.cron.cron_job',
-     '>> '+os.path.join(BASE_DIR, 'config/log/cron.log')+' 2>&1 ')
+     '>> '+os.path.join(BASE_DIR, f'config/cron_log/{datetime.now().date()}.log')+' 2>&1 ')
 ]
