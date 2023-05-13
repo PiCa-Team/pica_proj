@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+
+from django.utils import timezone
+
 from config.environ import Environ
 import pymysql
 import os
@@ -41,7 +44,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "train_manage",
-    "user"
+    "user",
+    "core",
+    "connect",
+    "config",
+    "django_crontab",
 
 ]
 
@@ -161,3 +168,9 @@ SESSION_COOKIE_AGE = 1800  # 1800 seconds = 30 minutes
 SUPERSET_URL = Environ.SUPERSET_URL
 SUPERSET_USERNAME = Environ.SUPERSET_USERNAME
 SUPERSET_PASSWORD = Environ.SUPERSET_PASSWORD
+
+CRONJOBS = [
+    ('15 8,18 * * *',
+     'train_manage.cron.cron_job',
+     '>> '+os.path.join(BASE_DIR, 'config/log/cron.log')+' 2>&1 ')
+]
