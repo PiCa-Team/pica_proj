@@ -2,50 +2,59 @@ from django.db import models
 
 
 class SubwayLine(models.Model):
-    subway_line = models.CharField(max_length=10, db_index=True)
+    name = models.CharField(max_length=10, db_index=True)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
     class Meta:
-        db_table = 'pica_subwayline'
+        db_table = 'pica_subway_line'
 
     def __str__(self):
-        return f"{self.subway_line}"
+        return self.name
 
 
-class SubwayName(models.Model):
-    subway_name = models.CharField(max_length=10, db_index=True)
+class Station(models.Model):
+    name = models.CharField(max_length=10, db_index=True)
     subway_line = models.ForeignKey(SubwayLine, on_delete=models.CASCADE)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
     class Meta:
-        db_table = 'pica_subwayname'
+        db_table = 'pica_station'
 
     def __str__(self):
-        return f"{self.subway_line} - {self.subway_name}"
+        return f"{self.subway_line} - {self.name}"
 
 
-class TrainCongestion(models.Model):
-    train_number = models.CharField(max_length=10)
-    train_status = models.CharField(max_length=10)
-    train_up_down = models.CharField(max_length=10)
-    train_congestion = models.IntegerField()
-    train_car_congestion = models.CharField(max_length=100)
-    train_info_delivery_deadline = models.CharField(max_length=50)
-    subway_name = models.ForeignKey(SubwayName, on_delete=models.CASCADE, unique=False)
+class Train(models.Model):
+    number = models.CharField(max_length=10, unique=True)
+    status = models.CharField(max_length=10)
+    direction = models.CharField(max_length=10)
+    station = models.ForeignKey(Station, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'pica_train_congestion'
+        db_table = 'pica_train'
         indexes = [
-            models.Index(fields=[
-                'train_status',
-                'train_up_down',
-                'subway_name'
-            ])
+            models.Index(fields=['status', 'direction', 'station'])
         ]
+        unique_together = (('number', 'status', 'direction'),)
 
     def __str__(self):
-        return f"{self.train_number} - {self.subway_name}"
+        return f"{self.number} - {self.station}"
+
+
+class Congestion(models.Model):
+    congestion = models.IntegerField()
+    car_congestion = models.CharField(max_length=100)
+    info_delivery_deadline = models.CharField(max_length=50)
+    train = models.ForeignKey(Train, on_delete=models.CASCADE, unique=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'pica_congestion'
+
+    def __str__(self):
+        return f"{self.train.number} - {self.car_congestion} - {self.train.station.name}"

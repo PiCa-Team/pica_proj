@@ -28,7 +28,8 @@ def get_seoul_subway_realtime_location(start_index, end_index, subway_line):
             train_info['trainSttus'] = '진입'
 
         if train_info['statnNm'] in ['신도림지선', '성수지선', '신정지선']:
-            print("3개의 지선 중에 한개가 포함되어 삭제되었습니다.")
+            print("3개의 지선(신도림지선, 성수지선, 신정지선)중에 한개에 해당되어 삭제되었습니다.")
+            print("-----------------------------------------------------------")
             continue
 
         data = {
@@ -42,7 +43,12 @@ def get_seoul_subway_realtime_location(start_index, end_index, subway_line):
 
         result.append(data)
 
-    # print(result, len(result))
+    print(f"전체 실시간 {subway_line} 지하철 수:"
+          f"{len(train_infos)}")
+    print("-----------------------------------------------------------")
+    print(f"최종 실시간 {subway_line} 지하철 수: "
+          f"{len(result)}")
+    print("-----------------------------------------------------------")
     return result
 
 
