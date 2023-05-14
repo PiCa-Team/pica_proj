@@ -1,10 +1,10 @@
 from django.contrib import admin
 
-from train_manage.models import *
+from train_manage.models import SubwayLine, Station, Train, Congestion
 
 # Register your models here.
 
-admin.register(SubwayLine)
-admin.register(Station)
-admin.register(Train)
-admin.register(Congestion)
+admin.site.register(SubwayLine)
+admin.site.register(Station)
+admin.site.register(Train)
+admin.site.register(Congestion)
