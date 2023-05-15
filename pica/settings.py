@@ -173,7 +173,7 @@ CRONJOBS = [
 
     ('*/2 * * * *',
      'train_manage.cron.cron_job',
-     '>> '+os.path.join(BASE_DIR, f'config/cron_log/{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}.log')+' 2>&1 ')
+     '>> '+os.path.join(BASE_DIR, f'config/cron_log/{datetime.now().date()}.log')+' 2>&1 ')
 
 
 ]
