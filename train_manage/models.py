@@ -44,6 +44,12 @@ class Train(models.Model):
     def __str__(self):
         return f"{self.number} - {self.station}"
 
+    def created_at_without_microseconds(self):
+        return self.created_at.replace(microsecond=0)
+
+    def updated_at_without_microseconds(self):
+        return self.updated_at.replace(microsecond=0)
+
 
 class Congestion(models.Model):
     congestion = models.IntegerField()
@@ -58,3 +64,9 @@ class Congestion(models.Model):
 
     def __str__(self):
         return f"{self.train.number} - {self.car_congestion} - {self.train.station.name}"
+
+    def created_at_without_microseconds(self):
+        return self.created_at.replace(microsecond=0)
+
+    def updated_at_without_microseconds(self):
+        return self.updated_at.replace(microsecond=0)
