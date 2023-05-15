@@ -27,7 +27,7 @@ class Station(models.Model):
 
 
 class Train(models.Model):
-    number = models.CharField(max_length=10, unique=True)
+    number = models.CharField(max_length=10)
     status = models.CharField(max_length=10)
     direction = models.CharField(max_length=10)
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
@@ -49,7 +49,7 @@ class Congestion(models.Model):
     congestion = models.IntegerField()
     car_congestion = models.CharField(max_length=100)
     info_delivery_deadline = models.CharField(max_length=50)
-    train = models.ForeignKey(Train, on_delete=models.CASCADE, unique=False)
+    train = models.ForeignKey(Train, on_delete=models.CASCADE, db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
