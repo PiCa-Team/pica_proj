@@ -68,7 +68,8 @@ def get_and_save_train_congestion(train_live_infos):
                 number=sk_data['trainY'],
                 status=train_live_info['trainSttus'],
                 direction=train_live_info['updnLine'],
-                station_id=subway_name.id
+                station_id=subway_name.id,
+                defaults={'status': train_live_info['trainSttus'], 'direction': train_live_info['updnLine']}
             )
             if created:
                 new_station = {
