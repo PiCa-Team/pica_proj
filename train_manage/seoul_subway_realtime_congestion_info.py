@@ -64,20 +64,21 @@ def get_and_save_train_congestion(train_live_infos):
         for confirm_json, subway_name, train_live_info in get_train_data(train_live_infos):
             sk_data = confirm_json
 
-            existing_train, created = Train.objects.get_or_create(
-                number=sk_data['trainY'],
-                status=train_live_info['trainSttus'],
-                direction=train_live_info['updnLine'],
-                station_id=subway_name.id,
-                defaults={'status': train_live_info['trainSttus'], 'direction': train_live_info['updnLine']}
-            )
-            if created:
-                new_station = {
-                    "number": sk_data['trainY'],
-                    "status": train_live_info['trainSttus'],
-                    "direction": train_live_info['updnLine']
-                }
-                new_station_list.append(new_station)
+            try:
+                existing_train = Train.objects.get(
+                    number=sk_data['trainY'],
+                    status=train_live_info['trainSttus'],
+                    direction=train_live_info['updnLine'],
+                    station_id=subway_name.id
+                )
+            except Train.DoesNotExist:
+                existing_train = Train.objects.create(
+                    number=sk_data['trainY'],
+                    status=train_live_info['trainSttus'],
+                    direction=train_live_info['updnLine'],
+                    station_id=subway_name.id
+                )
+                new_station_list.append(existing_train)
 
             new_congestion = Congestion(
                 congestion=sk_data['congestionResult']['congestionTrain'],
