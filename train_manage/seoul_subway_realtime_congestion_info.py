@@ -13,7 +13,6 @@ from config.environ import Environ
 from train_manage.models import Station, Train, Congestion
 from train_manage.seoul_subway_realtime_location_info import get_seoul_subway_realtime_location
 from core.db_handler import bulk_insert_data_to_database
-from django.db import IntegrityError
 
 
 def get_train_data(train_live_infos):
@@ -86,7 +85,7 @@ def get_and_save_train_congestion(train_live_infos):
             new_congestion = Congestion(
                 congestion=sk_data['congestionResult']['congestionTrain'],
                 car_congestion=sk_data['congestionResult']['congestionCar'],
-                info_delivery_deadline=train_live_info['recptnDt'],
+                info_delivery_deadline=datetime.strptime(train_live_info['recptnDt'], '%Y-%m-%d %H:%M:%S'),
                 train_id=existing_train.id
             )
 

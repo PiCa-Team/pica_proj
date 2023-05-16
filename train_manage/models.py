@@ -48,7 +48,7 @@ class Train(models.Model):
 class Congestion(models.Model):
     congestion = models.IntegerField()
     car_congestion = models.CharField(max_length=100)
-    info_delivery_deadline = models.CharField(max_length=50)
+    info_delivery_deadline = models.DateTimeField()
     train = models.ForeignKey(Train, on_delete=models.CASCADE, db_index=True)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)

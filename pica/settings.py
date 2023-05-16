@@ -167,13 +167,13 @@ SUPERSET_USERNAME = Environ.SUPERSET_USERNAME
 SUPERSET_PASSWORD = Environ.SUPERSET_PASSWORD
 
 # date 설정
-now = datetime.now()
-formatted_date = now.strftime("%Y-%m-%d %H:%M:%S")
+now = datetime.now().date()
+# formatted_date = now.strftime("%Y-%m-%d_%H:%M:%S")
 
 CRONJOBS = [
     ('15 8,18 * * *',
      'train_manage.cron.cron_job',
-     '>> '+os.path.join(BASE_DIR, f'config/cron_log/{formatted_date}.log')+' 2>&1 ')
+     '>> '+os.path.join(BASE_DIR, f'config/cron_log/{now}.log')+' 2>&1 ')
 
     # ('*/2 * * * *',
     #  'train_manage.cron.cron_job',
