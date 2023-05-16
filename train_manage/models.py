@@ -31,15 +31,15 @@ class Train(models.Model):
     status = models.CharField(max_length=10)
     direction = models.CharField(max_length=10)
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
 
     class Meta:
         db_table = 'pica_train'
         indexes = [
             models.Index(fields=['status', 'direction', 'station'])
         ]
-        unique_together = (('number', 'status', 'direction'),)
+        unique_together = (('number', 'status', 'direction', 'station'),)
 
     def __str__(self):
         return f"{self.number} - {self.station}"
@@ -50,8 +50,8 @@ class Congestion(models.Model):
     car_congestion = models.CharField(max_length=100)
     info_delivery_deadline = models.CharField(max_length=50)
     train = models.ForeignKey(Train, on_delete=models.CASCADE, db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
 
     class Meta:
         db_table = 'pica_congestion'

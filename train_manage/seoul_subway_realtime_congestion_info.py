@@ -13,6 +13,7 @@ from config.environ import Environ
 from train_manage.models import Station, Train, Congestion
 from train_manage.seoul_subway_realtime_location_info import get_seoul_subway_realtime_location
 from core.db_handler import bulk_insert_data_to_database
+from django.db import IntegrityError
 
 
 def get_train_data(train_live_infos):
@@ -60,6 +61,7 @@ def get_and_save_train_congestion(train_live_infos):
     try:
         new_congestion_list = []
         new_station_list = []
+        exist_station_list = []
 
         for confirm_json, subway_name, train_live_info in get_train_data(train_live_infos):
             sk_data = confirm_json
@@ -71,6 +73,7 @@ def get_and_save_train_congestion(train_live_infos):
                     direction=train_live_info['updnLine'],
                     station_id=subway_name.id
                 )
+                exist_station_list.append(existing_train)
             except Train.DoesNotExist:
                 existing_train = Train.objects.create(
                     number=sk_data['trainY'],
@@ -91,7 +94,9 @@ def get_and_save_train_congestion(train_live_infos):
 
         bulk_insert_data_to_database(Congestion, new_congestion_list)
 
-        print(f"{new_station_list}이 새로 추가되었습니다.")
+        print(f"존재하는 열차번호 {len(exist_station_list)}개 \n"
+              f"추가되는 열차번호 {len(new_station_list)}개 \n"
+              f"{new_station_list}가 새로 추가되었습니다.")
         print("-----------------------------------------------------------")
         print(f"SK에 있는 열차번호 수: "
               f"{len(new_congestion_list)}")
