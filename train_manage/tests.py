@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.test import TestCase
 from config.environ import Environ
 import requests as req
@@ -5,10 +7,15 @@ from train_manage.seoul_subway_realtime_location_info import get_seoul_subway_re
 
 
 class GetLiveSeoulTrainCongestionTest(TestCase):
-    def test_train_sttus_zero_exclusion(self):
+
+    @patch("train_manage.req")
+    def test_train_sttus_zero_exclusion(self, mock_request):
         start_index = 1
         end_index = 50
         subway_line = '2호선'
+        mock_request.return_value.json = {
+            'realtimePositionList': 1
+        }
 
         url = f"http://swopenAPI.seoul.go.kr/api/subway/{Environ.SEOUL_DATA_API_KEY}/json/realtimePosition/" \
               f"{start_index}/{end_index}/{subway_line}/"
