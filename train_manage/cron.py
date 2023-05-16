@@ -17,7 +17,7 @@ def cron_job():
     print("-----------------------------------------------------------")
     try:
         subway_line = "2호선"
-        train_live_infos = get_seoul_subway_realtime_location("0", "50", subway_line)
+        train_live_infos = get_seoul_subway_realtime_location("0", "100", subway_line)
         get_and_save_train_congestion(train_live_infos)
 
         print(f"작업을 성공적으로 완료했습니다.:")
