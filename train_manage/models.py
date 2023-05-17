@@ -58,3 +58,27 @@ class Congestion(models.Model):
 
     def __str__(self):
         return f"{self.train.number} - {self.car_congestion} - {self.train.station.name}"
+
+
+class OriginalCCTV(models.Model):
+    video_url = models.CharField(max_length=255, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'pica_original_cctv'
+
+    def __str__(self):
+        return f"{self.video_url} - {self.created_at.now()}"
+
+
+class DetectedCCTV(models.Model):
+    video_url = models.CharField(max_length=255, db_index=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'pica_detected_cctv'
+
+    def __str__(self):
+        return f"{self.video_url} - {self.created_at.now()}"
