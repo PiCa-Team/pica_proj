@@ -84,7 +84,7 @@ def dashboard(request):
 
 @login_required
 def recorded_videos(request):
-    videos = get_videos_from_s3()
+    videos = get_videos_from_s3(bucket_name, prefix)
     video_names = [video.replace("video/", "") for video in videos]
     context = {
         'video_names': video_names,
