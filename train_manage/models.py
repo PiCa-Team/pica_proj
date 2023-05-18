@@ -89,6 +89,15 @@ class CCTVPolygon(models.Model):
     line_start = models.CharField(max_length=50),
     line_end = models.CharField(max_length=50)
     cctv = models.OneToOneField(OriginalCCTV, on_delete=models.CASCADE)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+
+    class Meta:
+        db_table = 'pica_cctv_polygon'
+
+    def __str__(self):
+        return f"{self.cctv.video_url} - {self.polygon} - {self.line_start} " \
+               f"- {self.line_start} - {self.created_at}"
 
 
 class DetectedCCTV(models.Model):
