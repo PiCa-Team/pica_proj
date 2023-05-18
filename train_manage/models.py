@@ -84,6 +84,13 @@ class OriginalCCTV(models.Model):
                f"- {self.video_url} - {self.created_at.now()}"
 
 
+class CCTVPolygon(models.Model):
+    polygon = models.CharField(max_length=100),
+    line_start = models.CharField(max_length=50),
+    line_end = models.CharField(max_length=50)
+    cctv = models.OneToOneField(OriginalCCTV, on_delete=models.CASCADE)
+
+
 class DetectedCCTV(models.Model):
     video_url = models.CharField(max_length=255, unique=True)
     original_cctv = models.OneToOneField(OriginalCCTV, on_delete=models.CASCADE)
