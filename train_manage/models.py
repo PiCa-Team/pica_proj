@@ -46,8 +46,17 @@ class Train(models.Model):
 
 
 class Congestion(models.Model):
-    congestion = models.IntegerField()
-    car_congestion = models.CharField(max_length=100)
+    congestion = models.IntegerField(default=0)
+    no1 = models.IntegerField(default=0)
+    no2 = models.IntegerField(default=0)
+    no3 = models.IntegerField(default=0)
+    no4 = models.IntegerField(default=0)
+    no5 = models.IntegerField(default=0)
+    no6 = models.IntegerField(default=0)
+    no7 = models.IntegerField(default=0)
+    no8 = models.IntegerField(default=0)
+    no9 = models.IntegerField(default=0)
+    no10 = models.IntegerField(default=0)
     info_delivery_deadline = models.DateTimeField()
     train = models.ForeignKey(Train, on_delete=models.CASCADE, db_index=True)
     created_at = models.DateField(auto_now_add=True)
@@ -57,7 +66,7 @@ class Congestion(models.Model):
         db_table = 'pica_congestion'
 
     def __str__(self):
-        return f"{self.train.number} - {self.car_congestion} - {self.train.station.name}"
+        return f"{self.train.number} - {self.congestion} - {self.train.station.name}"
 
 
 class OriginalCCTV(models.Model):

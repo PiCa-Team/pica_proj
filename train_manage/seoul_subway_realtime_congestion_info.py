@@ -25,7 +25,6 @@ def get_train_data(train_live_infos):
             statnNm = train_live_info['statnNm']
 
             subway_name, created = Station.objects.get_or_create(name=statnNm)
-            print(trainNo)
             url = f"https://apis.openapi.sk.com/puzzle/congestion-train/rltm/trains/" \
                   f"{subwayNm.replace('호선', '')}/" \
                   f"{trainNo}"
@@ -36,21 +35,21 @@ def get_train_data(train_live_infos):
             response = req.get(url, headers=headers)
             json_sk = response.json()
             confirm_json = json_sk.get('data', None)
+            if confirm_json is not None:
+                if len(confirm_json['congestionResult']['congestionCar']) >= 29:
+                    yield confirm_json, subway_name, train_live_info
+            else:
+                data = {
+                    "number": trainNo,
+                    "station": statnNm
+                }
+                no_data_train_list.append(data)
 
-            # if confirm_json is None:
-            #     data = {
-            #         "number": trainNo,
-            #         "station": statnNm
-            #     }
-            #     no_data_train_list.append(data)
-            # else:
-            #     yield confirm_json, subway_name, train_live_info
-
-        # print(f"SK에 없는 {subwayNm} 열차번호 수: "
-        #       f"{len(no_data_train_list)}")
-        # print(f"SK에 없는 {subwayNm} 열차번호와 역: "
-        #       f"{no_data_train_list}")
-        # print("-----------------------------------------------------------")
+        print(f"SK에 없는 {subwayNm} 열차번호 수: "
+              f"{len(no_data_train_list)}")
+        print(f"SK에 없는 {subwayNm} 열차번호와 역: "
+              f"{no_data_train_list}")
+        print("-----------------------------------------------------------")
     except Exception as e:
         print(f"{datetime.now().strftime('%Y-%m-%d')} Error: {e}")
         raise e
@@ -82,9 +81,20 @@ def get_and_save_train_congestion(train_live_infos):
                 )
                 new_station_list.append(existing_train)
 
+            car_congestion_split = sk_data['congestionResult']['congestionCar'].split("|")
+
             new_congestion = Congestion(
                 congestion=sk_data['congestionResult']['congestionTrain'],
-                car_congestion=sk_data['congestionResult']['congestionCar'],
+                no1=car_congestion_split[0],
+                no2=car_congestion_split[1],
+                no3=car_congestion_split[2],
+                no4=car_congestion_split[3],
+                no5=car_congestion_split[4],
+                no6=car_congestion_split[5],
+                no7=car_congestion_split[6],
+                no8=car_congestion_split[7],
+                no9=car_congestion_split[8],
+                no10=car_congestion_split[9],
                 info_delivery_deadline=datetime.strptime(train_live_info['recptnDt'], '%Y-%m-%d %H:%M:%S'),
                 train_id=existing_train.id
             )
@@ -110,5 +120,4 @@ def get_and_save_train_congestion(train_live_infos):
 
 if __name__ == '__main__':
     train_live_infos = get_seoul_subway_realtime_location("0", "50", "2호선")
-    get_train_data(train_live_infos)
-    # get_and_save_train_congestion(train_live_infos)
+    get_and_save_train_congestion(train_live_infos)
