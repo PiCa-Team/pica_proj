@@ -19,13 +19,13 @@ def get_train_data(train_live_infos):
     no_data_train_list = []
 
     try:
-        for train_live_info in train_live_infos:
+        for train_live_info in train_live_infos[:20]:
             trainNo = train_live_info['trainNo']
             subwayNm = train_live_info['subwayNm']
             statnNm = train_live_info['statnNm']
 
             subway_name, created = Station.objects.get_or_create(name=statnNm)
-
+            print(trainNo)
             url = f"https://apis.openapi.sk.com/puzzle/congestion-train/rltm/trains/" \
                   f"{subwayNm.replace('호선', '')}/" \
                   f"{trainNo}"
@@ -37,20 +37,20 @@ def get_train_data(train_live_infos):
             json_sk = response.json()
             confirm_json = json_sk.get('data', None)
 
-            if confirm_json is None:
-                data = {
-                    "number": trainNo,
-                    "station": statnNm
-                }
-                no_data_train_list.append(data)
-            else:
-                yield confirm_json, subway_name, train_live_info
+            # if confirm_json is None:
+            #     data = {
+            #         "number": trainNo,
+            #         "station": statnNm
+            #     }
+            #     no_data_train_list.append(data)
+            # else:
+            #     yield confirm_json, subway_name, train_live_info
 
-        print(f"SK에 없는 {subwayNm} 열차번호 수: "
-              f"{len(no_data_train_list)}")
-        print(f"SK에 없는 {subwayNm} 열차번호와 역: "
-              f"{no_data_train_list}")
-        print("-----------------------------------------------------------")
+        # print(f"SK에 없는 {subwayNm} 열차번호 수: "
+        #       f"{len(no_data_train_list)}")
+        # print(f"SK에 없는 {subwayNm} 열차번호와 역: "
+        #       f"{no_data_train_list}")
+        # print("-----------------------------------------------------------")
     except Exception as e:
         print(f"{datetime.now().strftime('%Y-%m-%d')} Error: {e}")
         raise e
@@ -110,4 +110,5 @@ def get_and_save_train_congestion(train_live_infos):
 
 if __name__ == '__main__':
     train_live_infos = get_seoul_subway_realtime_location("0", "50", "2호선")
-    get_and_save_train_congestion(train_live_infos)
+    get_train_data(train_live_infos)
+    # get_and_save_train_congestion(train_live_infos)

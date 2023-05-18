@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
-from connect.aws_session import AWSSession
+from django.shortcuts import render, redirect
+from .s3_to_db_importer import *
 from config.environ import Environ
 from core.aws_handler import get_videos_from_s3
 from core.superset_handler import get_superset_detail_info
@@ -11,20 +11,39 @@ sk = Environ.SK_API_KEY
 seoul = Environ.SEOUL_DATA_API_KEY
 
 # AWS_INFO
-s3 = AWSSession.connector_cl('s3')
-bucket_name = 'pica-team'
-prefix = "video"
+bucket_name = settings.AWS_STORAGE_BUCKET_NAME
+prefix = settings.AWS_LOCATION
+sub_prefix_1 = settings.AWS_SUB_PREFIX_1
+video_url = f"https://{bucket_name}.s3.{Environ.AWS_REGION}.amazonaws.com/{prefix}/"
 
 
 @login_required
 def home(request):
-    videos = get_videos_from_s3()
-    print(videos)
-    video_url = f"https://{bucket_name}.s3.{Environ.AWS_REGION}.amazonaws.com/{videos[1]}"
+    if request.method == 'POST':
+        subway_line = request.POST.get('subway_line')
+        station = request.POST.get('station')
+        video_list = request.FILES.getlist('videos')
+
+        import_original_video_to_s3(video_list)
+        import_original_video_from_s3_to_db(video_list, subway_line, station)
+
+        return redirect('home')
+
+    subway_lines = SubwayLine.objects.all().order_by('-id')
+    stations = Station.objects.all()
+    s3_original_videos = get_videos_from_s3(bucket_name, prefix)
+    s3_detected_videos = get_videos_from_s3(bucket_name, sub_prefix_1)
+    original_video_urls = [video_url + original_video.replace("video/","") for original_video in s3_original_videos]
+    detected_video_urls = [video_url + detected_video.replace("video/","") for detected_video in s3_detected_videos]
+
     context = {
-        "video_url": video_url,
+        "subway_lines": subway_lines,
+        "stations": stations,
+        "original_video_urls": original_video_urls,
+        "detected_video_urls": detected_video_urls
     }
-    return render(request, 'cctv.html', context=context)
+    print(context)
+    return render(request, 'cctv.html', context)
 
 
 def dashboard(request):
@@ -58,7 +77,7 @@ def dashboard(request):
         'selected_dashboard_id': selected_dashboard_id
     }
 
-    print(context)
+    # print(context)
 
     return render(request, 'dashboard.html', context)
 
@@ -76,10 +95,10 @@ def recorded_videos(request):
 
 @login_required
 def recorded_videos_detail(request, video_name):
-    video_url = f"https://{bucket_name}.s3.{Environ.AWS_REGION}.amazonaws.com/{prefix}/{video_name}"
+    s3_video_url = video_url + f"{video_name}"
     context = {
         'video_name': video_name,
-        'video_url': video_url
+        'video_url': s3_video_url
     }
 
     return render(request, 'recorded_videos_detail.html', context)

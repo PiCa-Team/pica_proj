@@ -61,7 +61,9 @@ class Congestion(models.Model):
 
 
 class OriginalCCTV(models.Model):
-    video_url = models.CharField(max_length=255, db_index=True)
+    video_url = models.CharField(max_length=255, unique=True)
+    subway_line = models.ForeignKey(SubwayLine, on_delete=models.CASCADE)
+    station = models.ForeignKey(Station, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -69,11 +71,13 @@ class OriginalCCTV(models.Model):
         db_table = 'pica_original_cctv'
 
     def __str__(self):
-        return f"{self.video_url} - {self.created_at.now()}"
+        return f"{self.subway_line.name} - {self.station.name} " \
+               f"- {self.video_url} - {self.created_at.now()}"
 
 
 class DetectedCCTV(models.Model):
-    video_url = models.CharField(max_length=255, db_index=True)
+    video_url = models.CharField(max_length=255, unique=True)
+    original_cctv = models.OneToOneField(OriginalCCTV, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -81,4 +85,5 @@ class DetectedCCTV(models.Model):
         db_table = 'pica_detected_cctv'
 
     def __str__(self):
-        return f"{self.video_url} - {self.created_at.now()}"
+        return f"{self.original_cctv.subway_line.name} - {self.original_cctv.station.name} " \
+               f"- {self.video_url} - {self.created_at.now()}"

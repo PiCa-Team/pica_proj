@@ -170,6 +170,7 @@ SUPERSET_PASSWORD = Environ.SUPERSET_PASSWORD
 now = datetime.now().date()
 # formatted_date = now.strftime("%Y-%m-%d_%H:%M:%S")
 
+# 장고 크론탭 설정
 CRONJOBS = [
     ('15 8,18 * * *',
      'train_manage.cron.cron_job',
@@ -178,6 +179,19 @@ CRONJOBS = [
     # ('*/2 * * * *',
     #  'train_manage.cron.cron_job',
     #  '>> '+os.path.join(BASE_DIR, f'config/cron_log/{datetime.now().date()}.log')+' 2>&1 ')
-
-
 ]
+
+# 장고 기본 파일 스토리지 시스템
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_ACCESS_KEY_ID = Environ.AWS_ACCESS_KEY
+AWS_SECRET_ACCESS_KEY = Environ.AWS_SECRET_ACCESS_KEY
+AWS_S3_REGION_NAME = Environ.AWS_REGION
+
+AWS_STORAGE_BUCKET_NAME = 'pica-team'
+AWS_LOCATION = 'video'
+AWS_SUB_PREFIX_1 = 'detection_video'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com/%s' % (AWS_STORAGE_BUCKET_NAME, AWS_LOCATION)
+
+# 3에 접근할 때 사용하는 서명 버전을 지정
+AWS_S3_SIGNATURE_VERSION = 's3v4'

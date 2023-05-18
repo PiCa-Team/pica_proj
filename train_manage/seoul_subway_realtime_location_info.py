@@ -53,4 +53,5 @@ def get_seoul_subway_realtime_location(start_index, end_index, subway_line):
 
 
 if __name__ == '__main__':
-    get_seoul_subway_realtime_location("0", '50', "2호선")
+    a = get_seoul_subway_realtime_location("0", '50', "2호선")
+    print(a)

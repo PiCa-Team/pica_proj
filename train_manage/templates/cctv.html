@@ -10,10 +10,51 @@
 {% endblock %}
 
 {% block content %}
-	<div class="container">
+    <div class="container">
         <h1>CCTV Live Feed</h1>
-        <div class="video-container">
-            <video id="video" src="{{ video_url }}" autoplay muted loop></video>
+        <div class="video-select">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label>
+	                <select name="subway_line">
+	                    {% for subway_line in subway_lines %}
+	                        <option value="{{ subway_line.name }}" selected>{{ subway_line.name }}</option>
+	                    {% endfor %}
+	                </select>
+                </label>
+                <label>
+	                <select name="station">
+	                    {% for station in stations %}
+	                        <option value="{{ station.name }}">{{ station.name }}</option>
+	                    {% endfor %}
+	                </select>
+                </label>
+				<input type="file" name="videos" id="videos-input" accept="video/*" multiple />
+                <input type="submit" value="Upload">
+            </form>
+        </div>
+        <div class="content-area">
+            <div class="video-section original">
+                <h2>Original Video</h2>
+                <div id="original-videos" class="video-container">
+                    {% for video_url in original_video_urls %}
+                        <div class="video-container">
+                            <video src="{{ video_url }}" autoplay muted loop onclick="zoomVideo(this)"></video>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="video-section detected">
+                <h2>Detected Video</h2>
+                <div id="detected-videos" class="video-container">
+                    {% for video_url in detected_video_urls %}
+                        <div class="video-container">
+                            <video src="{{ video_url }}" autoplay muted loop onclick="zoomVideo(this)"></video>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
