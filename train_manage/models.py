@@ -69,7 +69,8 @@ class Congestion(models.Model):
         return f"{self.train.number} - {self.congestion} - {self.train.station.name}"
 
 
-class OriginalCCTV(models.Model):
+class CCTV(models.Model):
+    name = models.CharField(max_length=255, unique=True, db_index=True)
     video_url = models.CharField(max_length=255, unique=True)
     subway_line = models.ForeignKey(SubwayLine, on_delete=models.CASCADE)
     station = models.ForeignKey(Station, on_delete=models.CASCADE)
@@ -77,23 +78,26 @@ class OriginalCCTV(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'pica_original_cctv'
+        db_table = 'pica_cctv'
+        indexes = [
+            models.Index(fields=['name', 'video_url'])
+        ]
 
     def __str__(self):
         return f"{self.subway_line.name} - {self.station.name} " \
-               f"- {self.video_url} - {self.created_at.now()}"
+               f"- {self.name} - {self.created_at.now()}"
 
 
-class CCTVPolygon(models.Model):
-    polygon = models.CharField(max_length=100),
-    line_start = models.CharField(max_length=50),
+class Polygon(models.Model):
+    polygon = models.CharField(max_length=100)
+    line_start = models.CharField(max_length=50)
     line_end = models.CharField(max_length=50)
-    cctv = models.OneToOneField(OriginalCCTV, on_delete=models.CASCADE)
+    cctv = models.OneToOneField(CCTV, on_delete=models.CASCADE)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 
     class Meta:
-        db_table = 'pica_cctv_polygon'
+        db_table = 'pica_polygon'
 
     def __str__(self):
         return f"{self.cctv.video_url} - {self.polygon} - {self.line_start} " \
@@ -101,14 +105,39 @@ class CCTVPolygon(models.Model):
 
 
 class DetectedCCTV(models.Model):
+    name = models.CharField(max_length=255, unique=True)
     video_url = models.CharField(max_length=255, unique=True)
-    original_cctv = models.OneToOneField(OriginalCCTV, on_delete=models.CASCADE)
+    cctv = models.OneToOneField(CCTV, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'pica_detected_cctv'
+        indexes = [
+            models.Index(fields=['name', 'video_url'])
+        ]
 
     def __str__(self):
-        return f"{self.original_cctv.subway_line.name} - {self.original_cctv.station.name} " \
-               f"- {self.video_url} - {self.created_at.now()}"
+        return f"{self.cctv.subway_line.name} - {self.cctv.station.name} " \
+               f"- {self.name} - {self.created_at}"
+
+
+class HeadCount(models.Model):
+    in_train = models.IntegerField()
+    out_train = models.IntegerField()
+    max_count = models.IntegerField()
+    density = models.FloatField()
+    density_degree = models.CharField(max_length=255)
+    detected_cctv = models.OneToOneField(DetectedCCTV, on_delete=models.CASCADE)
+    created_at = models.DateField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+
+    class Meta:
+        db_table = 'pica_headcount'
+        indexes = [
+            models.Index(fields=['density_degree', 'detected_cctv'])
+        ]
+
+    def __str__(self):
+        return f"{self.detected_cctv.cctv.subway_line.name} - {self.detected_cctv.cctv.station.name} " \
+               f"- {self.detected_cctv.cctv.name} - {self.created_at}"

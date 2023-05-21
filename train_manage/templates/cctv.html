@@ -29,7 +29,8 @@
 	                    {% endfor %}
 	                </select>
                 </label>
-				<input type="file" name="videos" id="videos-input" accept="video/*" multiple />
+{#				<input type="file" name="videos" id="videos-input" accept="video/*" multiple />#}
+                <input type="file" name="folder" id="folder-input" webkitdirectory directory multiple />
                 <input type="submit" value="Upload">
             </form>
         </div>
@@ -37,9 +38,9 @@
             <div class="video-section original">
                 <h2>Original Video</h2>
                 <div id="original-videos" class="video-container">
-                    {% for video_url in original_video_urls %}
+                    {% for cctv in cctvs %}
                         <div class="video-container">
-                            <video src="{{ video_url }}" autoplay muted loop onclick="zoomVideo(this)"></video>
+                            <video src="{{ cctv.video_url }}" autoplay muted loop onclick="zoomVideo(this)"></video>
                         </div>
                     {% endfor %}
                 </div>
@@ -48,9 +49,9 @@
             <div class="video-section detected">
                 <h2>Detected Video</h2>
                 <div id="detected-videos" class="video-container">
-                    {% for video_url in detected_video_urls %}
+                    {% for detected_cctv in detected_cctvs %}
                         <div class="video-container">
-                            <video src="{{ video_url }}" autoplay muted loop onclick="zoomVideo(this)"></video>
+                            <video src="{{ detected_cctv.video_url }}" autoplay muted loop onclick="zoomVideo(this)"></video>
                         </div>
                     {% endfor %}
                 </div>

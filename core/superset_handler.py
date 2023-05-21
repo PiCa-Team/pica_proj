@@ -33,7 +33,6 @@ def get_superset_detail_info():
             'dashboard_changed': dashboard['changed_on_delta_humanized']
         }
         dashboard_detail.append(data)
-
     return dashboard_detail
 
 

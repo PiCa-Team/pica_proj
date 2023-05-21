@@ -5,6 +5,7 @@ from config.environ import Environ
 from core.aws_handler import get_videos_from_s3
 from core.superset_handler import get_superset_detail_info
 from pica import settings
+from django.db import transaction, IntegrityError
 
 # Create your views here.
 sk = Environ.SK_API_KEY
@@ -12,9 +13,9 @@ seoul = Environ.SEOUL_DATA_API_KEY
 
 # AWS_INFO
 bucket_name = settings.AWS_STORAGE_BUCKET_NAME
-prefix = settings.AWS_LOCATION
-sub_prefix_1 = settings.AWS_SUB_PREFIX_1
-video_url = f"https://{bucket_name}.s3.{Environ.AWS_REGION}.amazonaws.com/{prefix}/"
+prefix = settings.AWS_VIDEO_PREFIX
+detected_prefix = settings.AWS_DETECTED_PREFIX
+video_url = f"https://{bucket_name}.s3.{Environ.AWS_REGION}.amazonaws.com"
 
 
 @login_required
@@ -22,27 +23,44 @@ def home(request):
     if request.method == 'POST':
         subway_line = request.POST.get('subway_line')
         station = request.POST.get('station')
-        video_list = request.FILES.getlist('videos')
+        video_info_folder = request.FILES.getlist('folder')
+        video_info_folder.sort(key=lambda x: x.name)
 
-        import_original_video_to_s3(video_list)
-        import_original_video_from_s3_to_db(video_list, subway_line, station)
+        with transaction.atomic():
+            try:
+                import_cctv_and_polygon_to_s3(video_info_folder)
+                print("S3에 CCTV 업로드 완료")
+                import_cctv_from_s3_to_db(video_info_folder, subway_line, station)
+                print("DB에 CCTV 삽입 작업 완료")
+                import_cctv_polygon_from_s3_to_db(video_info_folder)
+                print("DB에 POLYGON 삽입 완료")
+                print("------------------")
+                print("영상 디텍션 시작")
+                import_detected_cctv_and_headcount_to_s3(video_info_folder)
+                print("S3에 Detected CCTV 업로드 완료")
+                import_detected_cctv_from_s3_to_db(video_info_folder)
+                print("DB에 Detected CCTV 삽입 완료")
+                import_headcount_from_s3_to_db(video_info_folder)
+                print("DB에 인원 계수 삽입 완료")
+                print("------------------")
+                print("CCTV 전체 작업완료")
+            except IntegrityError as e:
+                error = "An error occurred: ", e
+                raise error
 
         return redirect('home')
 
     subway_lines = SubwayLine.objects.all().order_by('-id')
     stations = Station.objects.all()
-    s3_original_videos = get_videos_from_s3(bucket_name, prefix)
-    s3_detected_videos = get_videos_from_s3(bucket_name, sub_prefix_1)
-    original_video_urls = [video_url + original_video.replace("video/","") for original_video in s3_original_videos]
-    detected_video_urls = [video_url + detected_video.replace("video/","") for detected_video in s3_detected_videos]
+    cctvs = CCTV.objects.all()
+    detected_cctvs = DetectedCCTV.objects.all()
 
     context = {
         "subway_lines": subway_lines,
         "stations": stations,
-        "original_video_urls": original_video_urls,
-        "detected_video_urls": detected_video_urls
+        "cctvs": cctvs,
+        "detected_cctvs": detected_cctvs
     }
-    print(context)
     return render(request, 'cctv.html', context)
 
 
@@ -77,8 +95,6 @@ def dashboard(request):
         'selected_dashboard_id': selected_dashboard_id
     }
 
-    # print(context)
-
     return render(request, 'dashboard.html', context)
 
 
@@ -95,7 +111,7 @@ def recorded_videos(request):
 
 @login_required
 def recorded_videos_detail(request, video_name):
-    s3_video_url = video_url + f"{video_name}"
+    s3_video_url = f"{video_url}/{prefix}/{video_name}"
     context = {
         'video_name': video_name,
         'video_url': s3_video_url

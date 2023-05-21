@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     "connect",
     "config",
     "django_crontab",
-
+    "model"
 ]
 
 MIDDLEWARE = [
@@ -159,7 +159,7 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 
 # 사용자가 30분동안 활동이 없으면 자동으로 로그아웃
-SESSION_COOKIE_AGE = 1800  # 1800 seconds = 30 minutes
+SESSION_COOKIE_AGE = 3600  # 1800 seconds = 30 minutes
 
 # 슈퍼셋 설정
 SUPERSET_URL = Environ.SUPERSET_URL
@@ -189,9 +189,13 @@ AWS_SECRET_ACCESS_KEY = Environ.AWS_SECRET_ACCESS_KEY
 AWS_S3_REGION_NAME = Environ.AWS_REGION
 
 AWS_STORAGE_BUCKET_NAME = 'pica-team'
-AWS_LOCATION = 'video'
-AWS_SUB_PREFIX_1 = 'detection_video'
-AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com/%s' % (AWS_STORAGE_BUCKET_NAME, AWS_LOCATION)
+# AWS_LOCATION = 'video'
+AWS_DETECTED_PREFIX = 'detection_video'
+AWS_POLYGON_PREFIX = 'polygon'
+AWS_MODEL_PREFIX = 'model'
+AWS_HAED_COUNT_PREFIX = 'headcount'
+AWS_VIDEO_PREFIX = 'video'
+# AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com/%s' % (AWS_STORAGE_BUCKET_NAME, AWS_LOCATION)
 
 # 3에 접근할 때 사용하는 서명 버전을 지정
 AWS_S3_SIGNATURE_VERSION = 's3v4'
