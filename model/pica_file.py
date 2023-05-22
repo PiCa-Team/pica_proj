@@ -1,7 +1,7 @@
 # 다음의 모듈을 설치해주세요
 # pip install requirements.txt
 # pip install -e git+https://github.com/samson-wang/cython_bbox.git#egg=cython-bbox
-# pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117
+# pip install torch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117
 
 # YOLO모델 import
 from ultralytics import YOLO
