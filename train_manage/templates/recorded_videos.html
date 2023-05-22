@@ -14,10 +14,10 @@
         <h1>녹화된 영상</h1>
     </header>
     <section class="video-gallery">
-        {% for video_name in video_names %}
+        {% for cctv in cctvs %}
             <div class="video-container">
-                <a href="{% url 'video_detail' video_name %}">
-                    <h3>{{ video_name }}</h3>
+                <a href="{{ cctv.video_url }}">
+                    <h3>{{ cctv.name }}</h3>
                 </a>
             </div>
         {% endfor %}

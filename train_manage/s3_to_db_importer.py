@@ -151,8 +151,8 @@ def import_headcount_from_s3_to_db(video_info_folder):
                                               video_name=video_info.name.replace(".mp4", ".csv"))
             video_headcount_df = pd.read_csv(StringIO(video_headcount))
             video_headcount_df['density_degree'] = \
-                video_headcount_df['density_degree'].replace("0    ", "").replace(" Name:", ""). \
-                    replace(" density_degree,", "").replace(" dtype: object", "")
+                video_headcount_df['density_degree'].str.replace("0    ", "") \
+                    .str.replace(" Name: density_degree, dtype: object", "")
             new_headcount = HeadCount(
                 in_train=int(video_headcount_df['in_train']),
                 out_train=int(video_headcount_df['out_train']),

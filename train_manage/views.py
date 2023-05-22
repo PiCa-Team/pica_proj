@@ -2,7 +2,6 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .s3_to_db_importer import *
 from config.environ import Environ
-from core.aws_handler import get_videos_from_s3
 from core.superset_handler import get_superset_detail_info
 from pica import settings
 from django.db import transaction, IntegrityError
@@ -100,21 +99,18 @@ def dashboard(request):
 
 @login_required
 def recorded_videos(request):
-    videos = get_videos_from_s3(bucket_name, prefix)
-    video_names = [video.replace("video/", "") for video in videos]
+    cctvs = CCTV.objects.all().order_by('name')
     context = {
-        'video_names': video_names,
+        'cctvs': cctvs,
     }
-
     return render(request, 'recorded_videos.html', context)
 
 
 @login_required
 def recorded_videos_detail(request, video_name):
-    s3_video_url = f"{video_url}/{prefix}/{video_name}"
+    cctv = CCTV.objects.filter(name=video_name).first()
     context = {
         'video_name': video_name,
-        'video_url': s3_video_url
+        'video_url': cctv.video_url
     }
-
     return render(request, 'recorded_videos_detail.html', context)
