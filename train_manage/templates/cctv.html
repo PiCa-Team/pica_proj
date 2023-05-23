@@ -39,7 +39,8 @@
                 <h2>Original Video</h2>
                 <div id="original-videos" class="video-container">
                     {% for cctv in cctvs %}
-                        <div class="video-container">
+                        <div class="video-wrapper">
+                            <p class="video-title">{{ cctv.name }}</p>
                             <video src="{{ cctv.video_url }}" autoplay muted loop onclick="zoomVideo(this)"></video>
                         </div>
                     {% endfor %}
@@ -50,7 +51,8 @@
                 <h2>Detected Video</h2>
                 <div id="detected-videos" class="video-container">
                     {% for detected_cctv in detected_cctvs %}
-                        <div class="video-container">
+                        <div class="video-wrapper">
+                            <p class="video-title">{{ detected_cctv.name }}</p>
                             <video src="{{ detected_cctv.video_url }}" autoplay muted loop onclick="zoomVideo(this)"></video>
                         </div>
                     {% endfor %}
