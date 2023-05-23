@@ -1,3 +1,11 @@
+import os
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pica.settings")
+
+import django
+
+django.setup()
+
 import json
 import pandas as pd
 from config.environ import Environ
@@ -5,12 +13,12 @@ from core.aws_handler import get_model_from_s3, get_csv_from_s3, get_ploygon_fro
 from model.pica_file import make_result
 from pica import settings
 from django.core.files.storage import default_storage
-from .models import *
 from io import StringIO, BytesIO
 from connect.aws_session import AWSSession
 from ultralytics import YOLO
-import os
 import subprocess
+import re
+from train_manage.models import SubwayLine, Station, CCTV, Polygon, DetectedCCTV, HeadCount
 
 s3 = AWSSession.connector_cl('s3')
 bucket_name = settings.AWS_STORAGE_BUCKET_NAME
@@ -150,10 +158,7 @@ def import_headcount_from_s3_to_db(video_info_folder):
                                               csv_prefix=csv_prefix,
                                               video_name=video_info.name.replace(".mp4", ".csv"))
             video_headcount_df = pd.read_csv(StringIO(video_headcount))
-            video_headcount_df['density_degree'] = video_headcount_df['density_degree'].astype(str)
-            video_headcount_df['density_degree'] = \
-                video_headcount_df['density_degree'].str.replace("0    ", "") \
-                    .str.replace(" Name: density_degree, dtype: object", "")
+
             new_headcount = HeadCount(
                 in_train=int(video_headcount_df['in_train']),
                 out_train=int(video_headcount_df['out_train']),
@@ -164,3 +169,26 @@ def import_headcount_from_s3_to_db(video_info_folder):
             )
 
             new_headcount.save()
+
+
+def find_korean(text):
+    # 한글만 선택하는 정규표현식
+    pattern = re.compile('[ㄱ-ㅎㅏ-ㅣ가-힣]+')
+    result = pattern.findall(text)
+    return result
+
+
+def update_headcount_from_db():
+    headcounts = HeadCount.objects.filter(density_degree__icontains='Name')
+
+    for headcount in headcounts:
+        # density_degree에서 'Name'을 삭제
+        new_density_degree = find_korean(headcount.density_degree)
+        new_density_degree = ' '.join(new_density_degree).strip()
+
+        headcount.density_degree = new_density_degree
+        headcount.save()
+
+
+if __name__ == '__main__':
+    update_headcount_from_db()

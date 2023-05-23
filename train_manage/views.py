@@ -41,6 +41,8 @@ def home(request):
                 print("DB에 Detected CCTV 삽입 완료")
                 import_headcount_from_s3_to_db(video_info_folder)
                 print("DB에 인원 계수 삽입 완료")
+                update_headcount_from_db()
+                print("DB density_degree 컬럼 오타 업데이트")
                 print("------------------")
                 print("CCTV 전체 작업완료")
             except IntegrityError as e:
