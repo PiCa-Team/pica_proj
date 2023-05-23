@@ -14,7 +14,9 @@
 <body>
 	{% block navbar %}
 		<nav class="navbar">
-            <a href="{% url "home" %}" class="navbar-brand">Pica</a>
+            <a href="{% url "home" %}" class="navbar-brand">
+				<img src="{% static 'images/logo.png' %}" alt="Pica logo">
+            </a>
 	        <div class="navbar-menu">
 	            <a href="{% url "introduce" %}" class="navbar-item">프로젝트 소개</a>
 		        {% if user.is_authenticated %}
