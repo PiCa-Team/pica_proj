@@ -8,19 +8,23 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #222;
+    background-color: #2f3640;  /* 배경색 변경 */
     padding: 1rem;
     position: fixed; /* 네비바를 고정 */
     top: 0; /* 상단에 고정 */
     left: 0; /* 왼쪽에 고정 */
     right: 0; /* 오른쪽에 고정 */
-    z-index: 1000; /* 다른 요소들 위에 표시되도록 함 */
+    z-index: 1001; /* 다른 요소들 위에 표시되도록 함 */
+    transition: background-color 0.5s;  /* 배경색 변경 효과 추가 */
 }
 
-.navbar-brand {
-    font-size: 1.5rem;
-    color: #fff;
-    text-decoration: none;
+.navbar:hover {
+    background-color: #718093;  /* 마우스를 올렸을 때의 배경색 */
+}
+
+.navbar-brand img {
+    height: 5rem;  /* 원하는 높이로 설정 */
+    width: auto;  /* 너비는 자동으로 설정하여 비율을 유지 */
 }
 
 .navbar-menu {
@@ -30,10 +34,11 @@ body {
 .navbar-item {
     margin-left: 1rem;
     font-size: 1.25rem;
-    color: #fff;
+    color: #ecf0f1;  /* 글자색 변경 */
     text-decoration: none;
+    transition: color 0.5s;  /* 글자색 변경 효과 추가 */
 }
 
 .navbar-item:hover {
-    color: #ddd;
+    color: #b2bec3;  /* 마우스를 올렸을 때의 글자색 */
 }
